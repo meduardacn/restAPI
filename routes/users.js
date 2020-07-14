@@ -4,10 +4,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../auth');
 const config = require('../config');
+const rjwt = require('restify-jwt-community');
 
 module.exports = server => {
     //Register User
-    server.post('/register', (req, res, next)=>{
+    server.post('/register',
+    rjwt({ secret: config.JWT_SECRET }),
+    (req, res, next)=>{
         const { email , password } = req.body; 
         const user = new User({
             email,
