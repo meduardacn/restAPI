@@ -34,9 +34,9 @@ module.exports = server => {
             })
         });
     });
-    
+
     //Auth User
-    server.post('/auth',async (req, res, next)=>{
+    server.post('/signIn',async (req, res, next) => {
         const {email, password} = req.body;
         try {
             //Authenticate User
@@ -57,4 +57,20 @@ module.exports = server => {
             return next(new errors.UnauthorizedError(err));
         }
     });
+
+
+    server.post('/userInformations',
+    rjwt({ secret: config.JWT_SECRET }),
+    async (req,res, next) => {
+        const { email } = req.body;
+        console.log(email);
+        try {
+            const user = await User.findOne({ email: email });
+            res.json(user);
+            return next()
+        } catch (err) {
+            return next(new errors.ResourceNotFoundError(`There's no informations`));
+        }
+    });
+
 }
