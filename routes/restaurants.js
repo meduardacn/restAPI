@@ -34,13 +34,13 @@ module.exports = server => {
         if(!req.is('application/json')){
             return next(new errors.InvalidContentError("Expects 'application/json'"));
         }
-        const { name } = req.body;
-        let restaurant = new Restaurant({
-            name
-        })
         try {
-            restaurant.save();
+            const restaurant = await Restaurant.create(req.body);
+            // restaurant.save();
             res.send(201);
+            console.log({
+                coordinates: restaurant.location.coordinates
+            });
             next()
         }catch(err){
             return next(new errors.InternalError(err.message));

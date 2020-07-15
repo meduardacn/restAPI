@@ -16,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.24",
     "mongoose-timestamp": "^0.6.0",
+    "node-geocoder": "^3.27.0",
     "restify": "^8.5.1",
     "restify-jwt-community": "^1.1.4"
   },
