@@ -8,22 +8,25 @@ const rjwt = require('restify-jwt-community');
 
 module.exports = server => {
     //Register User
-    server.post('/register',
-    rjwt({ secret: config.JWT_SECRET }),
-    (req, res, next)=>{
-        const { email , password } = req.body; 
+    server.post('/register', async (req, res, next) => {
+        const { email, password } = req.body; 
+        try{
+            const user = await User.findOne({ email: email });
+            if(user) return next(new errors.ResourceNotFoundError(`${email} is already in use`));
+        }catch(err){
+        }
+        
         const user = new User({
             email,
             password
         });
 
         bcrypt.genSalt(10,(err, salt)=>{
-            bcrypt.hash(user.password, salt, async (err, hash)=>{
-                // Hash Password
+            bcrypt.hash(user.password, salt, async (err, hash) => {
                 user.password = hash;
                 try{
                     await user.save();
-                    res.send();
+                    res.send(user);
                     next();
                 } catch(err){
                     return next(new errors.InternalError(err.message));
